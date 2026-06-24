@@ -1639,6 +1639,133 @@ h1, h2, h3, .display {
   text-transform: uppercase;
 }
 
+/* ── Responsive / Mobile ─────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+
+  /* Header — stack vertically */
+  .app-header {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px 14px 12px;
+    gap: 10px;
+  }
+
+  .header-left {
+    justify-content: center;
+  }
+
+  .header-left h1 { font-size: 18px; }
+
+  .your-game-banner {
+    padding: 8px 12px;
+  }
+
+  .your-game-matchup {
+    font-size: 13px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sync-indicator {
+    justify-content: center;
+  }
+
+  /* Groups grid — single column, tighter padding */
+  .groups-grid {
+    grid-template-columns: 1fr;
+    padding: 12px 10px;
+    gap: 10px;
+  }
+
+  /* Group card */
+  .group-card { border-radius: var(--radius); }
+
+  /* Standings table — hide W/D/L and GF/GA, keep GD and Pts */
+  .standings-table th:nth-child(4),
+  .standings-table td:nth-child(4),
+  .standings-table th:nth-child(5),
+  .standings-table td:nth-child(5),
+  .standings-table th:nth-child(6),
+  .standings-table td:nth-child(6),
+  .standings-table th:nth-child(7),
+  .standings-table td:nth-child(7),
+  .standings-table th:nth-child(8),
+  .standings-table td:nth-child(8) { display: none; }
+
+  .standings-table { font-size: 11px; }
+  .team-col { min-width: 100px; }
+  .fifa-rank { display: none; }
+
+  /* Match rows */
+  .match-row { font-size: 11px; gap: 4px; }
+
+  /* Live section */
+  .live-section { padding: 0 10px 16px; }
+
+  .live-card {
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px 14px;
+  }
+
+  .live-name { font-size: 13px; }
+  .live-score-num { font-size: 28px; }
+
+  /* Game preview */
+  .game-preview-panel { padding: 12px 14px 14px; }
+
+  .game-preview-columns {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .game-preview-divider { display: none; }
+
+  .prob-name { width: auto; min-width: 90px; }
+
+  /* Third place tracker */
+  .third-place-tracker { padding: 0 10px; }
+
+  /* Third place table — hide W/D/L and GF/GA */
+  .third-place-table th:nth-child(5),
+  .third-place-table td:nth-child(5),
+  .third-place-table th:nth-child(6),
+  .third-place-table td:nth-child(6),
+  .third-place-table th:nth-child(7),
+  .third-place-table td:nth-child(7),
+  .third-place-table th:nth-child(8),
+  .third-place-table td:nth-child(8),
+  .third-place-table th:nth-child(9),
+  .third-place-table td:nth-child(9) { display: none; }
+
+  .third-place-table { font-size: 11px; }
+
+  /* Bracket */
+  .bracket-header { padding: 16px 14px 0; }
+  .bracket-scroll { padding: 12px 10px 24px; }
+
+  /* Footer */
+  .app-footer { font-size: 10px; padding: 10px 8px; }
+}
+
+@media (max-width: 900px) and (min-width: 641px) {
+
+  /* Tablet — 2-column grid, slightly reduced padding */
+  .groups-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    padding: 16px 16px;
+  }
+
+  .app-header { padding: 0 16px; }
+  .game-preview-panel { padding: 16px 16px 18px; }
+  .bracket-header { padding: 20px 16px 0; }
+  .bracket-scroll { padding: 20px 16px 36px; }
+  .live-section { padding: 0 16px 20px; }
+}
+
 /* ── Fireworks celebration ───────────────────────────────────────────────── */
 .fw-overlay {
   position: fixed;
