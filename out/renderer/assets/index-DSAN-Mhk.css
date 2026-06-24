@@ -1,0 +1,609 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── FIFA 2026 Design Tokens ─────────────────────────────────────────────────
+   Core brand:      Black · White · Gold
+   Host accents:    USA Blue · Mexico Green · Canada Red
+   ───────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg:          #080808;
+  --surface:     #111111;
+  --surface2:    #1c1c1c;
+  --surface3:    #242424;
+  --border:      #2e2e2e;
+  --border-soft: #1e1e1e;
+
+  /* Text */
+  --text:        #F2EFE6;
+  --text-muted:  #7a7870;
+  --text-dim:    #444240;
+
+  /* FIFA Gold — primary accent */
+  --gold:        #B8922A;
+  --gold-mid:    #D4A832;
+  --gold-bright: #F0C84A;
+  --gold-glow:   rgba(212, 168, 50, 0.18);
+
+  /* USA Blue — Group E "your game" accent */
+  --usa-blue:       #0A2D6E;
+  --usa-blue-mid:   #1A4FA8;
+  --usa-blue-bright:#4A8FE8;
+  --usa-blue-glow:  rgba(26, 79, 168, 0.20);
+
+  /* Mexico Green — 3rd place source groups accent */
+  --mx-green:       #00572A;
+  --mx-green-mid:   #007A3D;
+  --mx-green-bright:#2DB56A;
+  --mx-green-glow:  rgba(0, 122, 61, 0.18);
+
+  /* Canada Red — used for alerts / live indicators */
+  --ca-red:       #CC1230;
+  --ca-red-bright:#F03050;
+
+  /* Utility */
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 12px;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+body {
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+}
+
+/* ── App shell ───────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 16px;
+}
+
+/* Gold top-edge accent line */
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold-bright);
+}
+
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.header-left h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.header-left .year-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  letter-spacing: 0.08em;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+}
+
+/* ── Your game banner ────────────────────────────────────── */
+.your-game-banner {
+  background: #0d2244;
+  border: 1px solid var(--usa-blue-mid);
+  border-radius: var(--radius);
+  padding: 8px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.your-game-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold-bright);
+}
+
+.your-game-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold-bright);
+  margin-bottom: 4px;
+}
+
+.your-game-matchup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.matchup-vs {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ── Groups grid ─────────────────────────────────────────── */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px;
+  padding: 20px 28px;
+}
+
+/* ── Group card ──────────────────────────────────────────── */
+.group-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Group E — USA Blue */
+.group-header.our-game {
+  background: #0c1e40;
+  border-bottom: 1px solid var(--usa-blue-mid);
+}
+.group-card.highlighted.our-game-card {
+  border-color: var(--usa-blue-mid);
+}
+
+/* Feeder groups — Mexico Green */
+.group-header.third-place-source {
+  background: #071f12;
+  border-bottom: 1px solid var(--mx-green-mid);
+}
+.group-card.highlighted.third-source-card {
+  border-color: var(--mx-green-mid);
+}
+
+.group-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  border: 1px solid currentColor;
+}
+.our-game .badge { color: var(--gold-bright); }
+.third-place-source .badge { color: var(--mx-green-bright); }
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 2px 5px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s;
+}
+.reset-btn:hover { color: var(--text-muted); }
+
+/* ── Standings table ─────────────────────────────────────── */
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.standings-table thead tr {
+  background: var(--surface2);
+}
+
+.standings-table th {
+  color: var(--text-muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.standings-table th.team-col { text-align: left; }
+
+.standings-table td {
+  padding: 6px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-soft);
+}
+.standings-table td.team-col { text-align: left; }
+.standings-table td.pos { color: var(--text-muted); width: 24px; font-size: 11px; }
+.standings-table td.pts {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.team-col {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 130px;
+}
+.flag { font-size: 15px; flex-shrink: 0; }
+.team-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.your-game-pill {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: #000;
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+/* Row accent colors */
+.row-advancing {
+  background: rgba(0, 122, 61, 0.07);
+}
+.row-advancing:hover { background: rgba(0, 122, 61, 0.14); }
+
+.row-third {
+  background: rgba(184, 146, 42, 0.08);
+}
+.row-third:hover { background: rgba(184, 146, 42, 0.15); }
+
+.row-eliminated { background: transparent; }
+.row-eliminated:hover { background: rgba(255,255,255,0.02); }
+
+/* ── Matches section ─────────────────────────────────────── */
+.matches-section {
+  padding: 10px 12px 12px;
+}
+
+.matches-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.match-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+  margin-bottom: 2px;
+  gap: 6px;
+}
+.match-row:hover { background: var(--surface2); }
+.match-row.played { opacity: 0.9; }
+.match-row.editing { background: var(--surface2); cursor: default; }
+
+.match-team {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11.5px;
+}
+.match-team.home { text-align: right; }
+.match-team.away { text-align: left; }
+
+.score {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 44px;
+  text-align: center;
+}
+.match-row.played .score { color: var(--gold-bright); }
+
+.score-editor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.score-editor input {
+  width: 34px;
+  background: var(--bg);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  padding: 2px;
+  outline: none;
+}
+.score-editor input::-webkit-inner-spin-button { display: none; }
+.score-editor button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: color 0.1s, background 0.1s;
+}
+.score-editor button:hover { color: var(--text); background: var(--border); }
+
+/* ── Game preview panel ──────────────────────────────────── */
+.game-preview-panel {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 28px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle diagonal texture */
+.game-preview-panel::after {
+  content: '26';
+  position: absolute;
+  right: -10px;
+  top: -30px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 180px;
+  line-height: 1;
+  color: rgba(255,255,255,0.018);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.02em;
+}
+
+.game-preview-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.game-preview-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+
+.game-preview-note {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.game-preview-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.game-preview-col { flex: 1; min-width: 0; }
+
+.game-preview-divider {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-muted);
+  padding: 20px 4px 0;
+  flex-shrink: 0;
+}
+
+.col-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.col-label.blue  { color: var(--usa-blue-bright); }
+.col-label.green { color: var(--mx-green-bright); }
+
+.col-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.col-dot.blue  { background: var(--usa-blue-bright); }
+.col-dot.green { background: var(--mx-green-bright); }
+
+/* ── Probability row ─────────────────────────────────────── */
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+  min-height: 22px;
+}
+
+.prob-flag {
+  font-size: 14px;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.prob-name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 130px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.prob-group-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  background: var(--surface3);
+  border-radius: 3px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+.prob-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--surface3);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 40px;
+}
+
+.prob-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.prob-bar-fill.blue  { background: var(--usa-blue-bright); }
+.prob-bar-fill.green { background: var(--mx-green-bright); }
+
+.prob-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  width: 40px;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.col-footnote {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  font-style: italic;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.prob-loading {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+/* ── Sync indicator ──────────────────────────────────────── */
+.sync-indicator { display: flex; align-items: center; flex-shrink: 0; }
+
+.sync-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.sync-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-bright); }
+.sync-btn:disabled { opacity: 0.5; cursor: default; }
+.sync-btn.success { border-color: var(--mx-green-mid); color: var(--mx-green-bright); }
+.sync-btn.error   { border-color: var(--ca-red);       color: var(--ca-red-bright); }
+.sync-btn.syncing { border-color: var(--gold);          color: var(--gold-bright); }
+
+.sync-icon { font-size: 14px; display: inline-block; }
+.sync-icon.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Footer ──────────────────────────────────────────────── */
+.app-footer {
+  text-align: center;
+  padding: 12px;
+  color: var(--text-dim);
+  font-size: 11px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
