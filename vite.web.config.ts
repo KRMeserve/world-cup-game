@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 // Standalone web build for GitHub Pages.
 // Output goes to web-dist/ (separate from the Electron out/).
 export default defineConfig({
-  base: '/KMeserve/world-cup-tracker/',
+  base: '/world-cup-game/',
   root: resolve(__dirname, 'src/renderer'),
   resolve: {
     alias: {
