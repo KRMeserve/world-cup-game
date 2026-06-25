@@ -1,10 +1,9 @@
 import { Group, Match } from '../types'
-import { computeStandings, TeamStanding } from './standings'
+import { computeStandings, isMathEliminated } from './standings'
+import { TeamStanding } from '../types'
+import { getMatch74Group } from './bracket'
 
 const N_SIMS = 10_000
-
-// Groups whose 3rd-place team can face the Group E winner (per FIFA bracket)
-const THIRD_PLACE_GROUPS = new Set(['A', 'B', 'C', 'D', 'F'])
 
 // ── FIFA World Rankings (approximate, as of tournament start) ─────────────
 // Used as the Bradley-Terry strength weights: strength = 1 / rank.
@@ -237,13 +236,26 @@ export function runSimulation(groups: Group[]): SimulationResult {
   const groupFirstCounts: Record<string, Record<string, number>> = {}
   const groupSecondCounts: Record<string, Record<string, number>> = {}
 
+  // Pre-compute teams mathematically eliminated from finishing 3rd in their group.
+  // The simulation doesn't respect elimination (it randomly simulates remaining matches),
+  // so we exclude these teams when selecting the 3rd-place representative per group.
+  const eliminatedFrom3rd = new Set<string>()
+  for (const g of groups) {
+    const standings = computeStandings(g)
+    for (let i = 3; i < standings.length; i++) {
+      if (isMathEliminated(standings, i, g)) {
+        eliminatedFrom3rd.add(standings[i].team.name)
+      }
+    }
+  }
+
   // Initialise counters for every team
   for (const g of groups) {
     groupFirstCounts[g.id] = {}
     groupSecondCounts[g.id] = {}
     for (const t of g.teams) {
       if (g.id === 'E') groupEFirstCounts[t.name] = 0
-      if (THIRD_PLACE_GROUPS.has(g.id)) thirdQualifiedCounts[t.name] = 0
+      thirdQualifiedCounts[t.name] = 0
       groupFirstCounts[g.id][t.name] = 0
       groupSecondCounts[g.id][t.name] = 0
     }
@@ -276,26 +288,27 @@ export function runSimulation(groups: Group[]): SimulationResult {
     }
 
     // ── Best-8 third-place qualification ──────────────────
-    // Collect the 3rd-place team from each of the 12 groups
-    const allThirds = allResults.map(r => ({
-      groupId: r.groupId,
-      teamName: r.standings[2].team.name,
-      standing: r.standings[2],
-    }))
+    // Collect the 3rd-place team from each group, skipping mathematically
+    // eliminated teams so they can't appear as 3rd-place in any simulation.
+    const allThirds = allResults.map(r => {
+      const eligible = r.standings.filter(s => !eliminatedFrom3rd.has(s.team.name))
+      const third = eligible[2] ?? r.standings[2]
+      return { groupId: r.groupId, teamName: third.team.name, standing: third }
+    })
 
     // Sort all 12 by quality and take the best 8
     const ranked = [...allThirds].sort((a, b) => compareThirdPlace(a.standing, b.standing))
     const top8Names = new Set(ranked.slice(0, 8).map(x => x.teamName))
 
-    // Of the 8 qualifying third-place teams, how many are from the match-74 eligible groups?
-    // Only one of them will actually face the Group E winner — we don't know the exact FIFA
-    // assignment table, so we distribute probability equally among the eligible qualifiers.
-    const eligibleThirds = allThirds.filter(
-      ({ groupId, teamName }) => THIRD_PLACE_GROUPS.has(groupId) && top8Names.has(teamName)
-    )
-    const share = eligibleThirds.length > 0 ? 1 / eligibleThirds.length : 0
-    for (const { teamName } of eligibleThirds) {
-      thirdQualifiedCounts[teamName] = (thirdQualifiedCounts[teamName] ?? 0) + share
+    // Use the official FIFA Annexe C lookup to determine exactly which 3rd-place team
+    // faces the Group E winner in match 74.
+    const top8Groups = ranked.slice(0, 8).map(x => x.groupId)
+    const match74Group = getMatch74Group(top8Groups)
+    if (match74Group) {
+      const match74Team = allThirds.find(x => x.groupId === match74Group && top8Names.has(x.teamName))
+      if (match74Team) {
+        thirdQualifiedCounts[match74Team.teamName] = (thirdQualifiedCounts[match74Team.teamName] ?? 0) + 1
+      }
     }
   }
 

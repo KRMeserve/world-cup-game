@@ -104,9 +104,32 @@ export function getClinched(standings: TeamStanding[], idx: number, group: Group
   const remaining = gamesRemaining(group, team.team.name)
   const maxPts = team.points + 3 * remaining
 
-  // Can't rise: if this team can still reach any team above on points, position isn't locked
+  // Can't rise: check whether this team could still overtake any team above them
   for (let i = 0; i < idx; i++) {
-    if (maxPts >= standings[i].points) return null
+    const above = standings[i]
+    if (maxPts > above.points) return null  // can surpass on points
+
+    if (maxPts === above.points) {
+      // Tied on max points — check if tiebreakers could still go in team's favour
+      const gdGap = above.goalDifference - team.goalDifference  // positive means above is ahead
+      if (gdGap <= 10 * remaining) {
+        // GD gap is bridgeable; check H2H
+        const h2h = group.matches.find(m =>
+          m.played && m.homeScore !== null && m.awayScore !== null && (
+            (m.homeTeam === team.team.name && m.awayTeam === above.team.name) ||
+            (m.homeTeam === above.team.name && m.awayTeam === team.team.name)
+          )
+        )
+        if (!h2h) return null  // no H2H played yet — outcome unknown
+        const teamIsHome = h2h.homeTeam === team.team.name
+        const teamGoals = teamIsHome ? h2h.homeScore! : h2h.awayScore!
+        const aboveGoals = teamIsHome ? h2h.awayScore! : h2h.homeScore!
+        if (teamGoals >= aboveGoals) return null  // team won or drew H2H — could rise
+        // Team lost H2H and GD gap is bridgeable — above team stays ahead, continue
+      }
+      // else: GD gap is insurmountable — team cannot overtake on tiebreakers, continue
+    }
+    // maxPts < above.points: can't reach them at all — continue
   }
 
   // Can't fall: no team below can reach this team's points (with tiebreaker checks)
